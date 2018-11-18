@@ -30,8 +30,9 @@ def main(inputs):
     types.StructField('review_body',types.StringType()),
     types.StructField('review_date',types.DateType())])
 
-    gift_cards_df = spark.read.parquet(inputs)
-    gift_cards_df.show()
+    input_df = spark.read.parquet(inputs)
+    input_df.show()
+    print("No of rows in input dataset:",inputs," is:",input_df.count())
 
     """
 
