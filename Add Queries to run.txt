@@ -1,0 +1,30 @@
+RAW DATA:
+	ETL Process:
+		Remove Duplicates (Distinct)
+		Filter upon YEARS (Upon Reviews)
+		Filter 10 user core
+		Filter 10 products core
+		Join (Broadcast)
+		Bought Together
+
+
+QUERIES:
+	Word Cloud
+	Most related words used in a category (like sound quality in reviews in earphone category)
+	No of questions asked per product and answered (: Does this laptop has 8gb ram)
+	Year wise reviews chart
+	
+
+Tableau:
+Reviews vs Ratings
+Sales-Rank
+Reviews vs Price
+Rating vs Price
+Most useful reviews
+Users rated vs users reviewing
+
+
+
+
+Questions:
+Number of users review and rating... like 3 times(10 reviews, 30 ratings)
