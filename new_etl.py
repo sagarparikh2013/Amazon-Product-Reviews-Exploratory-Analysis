@@ -49,13 +49,14 @@ def main(inputs,output,start_year,end_year):
     #print("No of rows in ten_core_dataset:",ten_core_dataset.count())
 
     #Selecting data in the given time range
-    # sliced_data = spark.sql("SELECT * from ten_core_dataset WHERE year(review_date) BETWEEN "+start_year+" AND "+end_year)
-    # print("No of rows in sliced_dataset:",sliced_data.count())
+    sliced_data = spark.sql("SELECT * from ten_core_dataset WHERE year(review_date) BETWEEN "+str(2010)+" AND "+str(2015))
+    sliced_data.registerTempTable("sliced_data")
+    print("No of rows in sliced_dataset:",sliced_data.count())
 
     #splitting the datasets year-wise
     years_year=[2010,2011,2012,2013,2014,2015]
     for i in years_year:
-        split_to_years = spark.sql("SELECT * from ten_core_dataset WHERE year(review_date)="+str(i))
+        split_to_years = spark.sql("SELECT * from sliced_data WHERE year(review_date)="+str(i))
         print("No of rows in",i,split_to_years.count())
         split_to_years.write.partitionBy('product_category').parquet(output+"_"+str(i))
 
