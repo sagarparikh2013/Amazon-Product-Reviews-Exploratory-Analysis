@@ -13,6 +13,13 @@ QUERIES:
 	Most related words used in a category (like sound quality in reviews in earphone category)
 	No of questions asked per product and answered (: Does this laptop has 8gb ram)
 	Year wise reviews chart
+	Date wise chart: Christmas, Boxing day, Blak Friday, Summer period, Winter Period
+
+
+	ML Part:
+	Correlation among features
+	Predicting sales on days like Black Friday, Boxing day
+	
 	
 
 Tableau:
