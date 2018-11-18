@@ -1,10 +1,11 @@
 import sys
 import os
+import time
 #assert sys.version_info >= (3, 5) # make sure we have Python 3.5+
 from datetime import datetime
 from pyspark.sql import SparkSession, functions, types
 from pyspark.sql.functions import col, from_unixtime,broadcast,udf,year
-spark = SparkSession.builder.appName('S3 Categories ETL').getOrCreate()
+spark = SparkSession.builder.appName('Amazon Product Categories ETL').config("spark.sql.broadcastTimeout", 36000).getOrCreate()
 #assert spark.version >= '2.3' # make sure we have Spark 2.3+
 sc = spark.sparkContext
 sc.setLogLevel('WARN')
@@ -33,7 +34,7 @@ def main(inputs,output,start_year,end_year):
 
     #Loading the data into dataframe
     raw_dataset = spark.read.option('sep','\t').csv(inputs,schema=amazon_schema,header='true')
-    raw_dataset = raw_dataset.repartition(160)
+    raw_dataset = raw_dataset.repartition(96)
     #print("No of rows in raw_dataset:",raw_dataset.count())
 
     #Keeping only those rows which are verified purchases
@@ -49,12 +50,13 @@ def main(inputs,output,start_year,end_year):
 
     #Selecting data in the given time range
     sliced_data = spark.sql("SELECT * from ten_core_dataset WHERE year(review_date) BETWEEN "+start_year+" AND "+end_year)
-    #print("No of rows in sliced_dataset:",sliced_data.count())
+    print("No of rows in sliced_dataset:",sliced_data.count())
 
     #Storing the data partitioned on product categories for easy access later on
     sliced_data.write.partitionBy('product_category').parquet(output)
-    
+    print("---Program ran for %s seconds ---" % (time.time() - start_time))
 if __name__ == '__main__':
+    start_time = time.time()
     inputs = sys.argv[1]
     output = sys.argv[2]
     start_year = sys.argv[3]
