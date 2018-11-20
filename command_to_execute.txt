@@ -1,1 +1,6 @@
+ETL of ALL DATA:
 time spark-submit --conf spark.dynamicAllocation.enabled=false --num-executors=96 --executor-cores=16 --executor-memory=100G new_etl.py amazon_raw_datasets etl_final_1995_2015 1995 2015 >> final_logs_with_broadcast.txt
+
+Basic Queries over smaller subsets of data:
+time spark-submit reviews_day_of_week.py etl_final_2000_2005
+ 
