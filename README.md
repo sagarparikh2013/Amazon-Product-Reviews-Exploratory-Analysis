@@ -26,6 +26,8 @@ Intention is also to answer some intriguing questions like below (but not limite
 	- What adjectives/adverbs are used in the reviews which are considered most helpful by
 	other users?
 	- What is the average length of reviews which are considered most useful by others?
+	- Product counts in each category
+	- Total number of reviewers in the dataset
 
 Potential Technology/Tools:
 
