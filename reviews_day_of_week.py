@@ -31,7 +31,7 @@ def main(inputs):
     types.StructField('review_date',types.DateType())])
 
     input_df = spark.read.parquet(inputs).cache()
-    #input_df.show()
+    input_df.show()
     print("No of rows in input dataset:",inputs," is:",input_df.count())
 
     #Total number of reviewers over all these years:
