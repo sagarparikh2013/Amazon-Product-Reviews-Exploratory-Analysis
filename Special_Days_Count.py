@@ -105,18 +105,9 @@ def main(inputs):
 
 	days_name=[black_friday,cyber_monday,christmas,remembrance_day,new_year,thanksgiving]
 	days_name_string=["Black Friday","Cyber Monday","Christmas Eve","Remembrance Day","New Year","Thanksgiving Day"]
-	y=0
-	# for x in days_name:
-	# 	# print([datetime.datetime.strptime(n, '%Y-%m-%d') for n in x])
-	# 	# print([parse(n).date() for n in x])
-	# 	print([parse(n).date().strftime('%Y-%m-%d') for n in x])
-	# 	abc=[parse(n).date().strftime('%Y-%m-%d') for n in x]
-	# 	print("dddddddddd")
-	# 	# print([datetime.strptime(n.group(2),"%d/%b/%Y:%H:%M:%S") for n in x])
-	
+	y=0	
 
 	for x in days_name:
-		# query=spark.sql("SELECT * from input_df where {} IN ({})".format("review_date", ", ".join([parse(n).date().strftime('%Y-%m-%d') for n in x])))
 		query=spark.sql("SELECT * from input_df where {} IN {}".format("review_date",tuple(x)))
 		print(days_name_string[y],": ",query.count())
 		y=y+1
