@@ -11,10 +11,7 @@ spark = SparkSession.builder.appName('Read Parquets S3 Categories ').getOrCreate
 sc = spark.sparkContext
 sc.setLogLevel('WARN')
 
-
-
 def main(inputs,start_year,end_year):
-	
 	amazon_schema = types.StructType([
 	types.StructField('marketplace',types.StringType()),
 	types.StructField('customer_id',types.IntegerType()),
@@ -137,15 +134,13 @@ def main(inputs,start_year,end_year):
 	days_name_initial=[black_friday_initial,cyber_monday_initial,christmas_initial,remembrance_day_initial,new_year_initial,thanksgiving_initial]
 	days_name=[black_friday,cyber_monday,christmas,remembrance_day,new_year,thanksgiving]
 
-	for i in range(6):
-		print(days_name_initial[i])
-		print(len(days_name_initial[i]))
-		print("dddddddddddddddddddddd")
+	# for i in range(6):
+	# 	print(days_name_initial[i])
+	# 	print(len(days_name_initial[i]))
+	# 	print("dddddddddddddddddddddd")
 
-	print("sssssssssssssssssssssssssssssssss")
-
-
-
+	# print("sssssssssssssssssssssssssssssssss")
+	
 	for day_initial,day in zip(days_name_initial,days_name):
 		for j in day_initial:
 			new_date_formatted=datetime.datetime.strptime(j,'%Y-%m-%d')
@@ -166,14 +161,12 @@ def main(inputs,start_year,end_year):
 		y=y+1
 		query.show()
 
+	# for i in range(6):
+	# 	print(days_name[i])
+	# 	print(len(days_name[i]))
+	# 	print("dddddddddddddddddddddd")
 
-
-	for i in range(6):
-		print(days_name[i])
-		print(len(days_name[i]))
-		print("dddddddddddddddddddddd")
-
-	print("sssssssssssssssssssssssssssssssss")
+	# print("sssssssssssssssssssssssssssssssss")
 
 
 
