@@ -145,9 +145,9 @@ def main(inputs):
 	days_name_string=["Black Friday","Cyber Monday","Christmas Eve","Remembrance Day","New Year","Thanksgiving Day"]
 	y=0	
 	for x in days_name:
-		query=spark.sql("SELECT * from input_df where {} IN {}".format("review_date",tuple(x)))
-		print(days_name_string[y],": ",query.count())
-		query.show()
+		# query=spark.sql("SELECT * from input_df where {} IN {}".format("review_date",tuple(x)))
+		# print(days_name_string[y],": ",query.count())
+		# query.show()
 		query=spark.sql("SELECT review_date,review_body from input_df where {} IN {} OR UPPER(review_body) LIKE UPPER('%{}%') ".format("review_date",tuple(x),days_name_string[y]))
 		print(days_name_string[y],": ",query.count())
 		y=y+1
