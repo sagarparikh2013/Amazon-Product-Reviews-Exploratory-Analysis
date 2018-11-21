@@ -31,9 +31,9 @@ def main(inputs):
     types.StructField('review_date',types.DateType())])
 
     input_df = spark.read.parquet(inputs)
+    input_df = input_df.repartition(96) 
     input_df.show()
     print("No of rows in input dataset:",inputs," is:",input_df.count())
-
     """
 
     raw_dataset = spark.read.option('sep','\t').csv(inputs,schema=amazon_schema,header='true')
