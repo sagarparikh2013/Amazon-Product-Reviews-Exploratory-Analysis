@@ -13,7 +13,7 @@ sc.setLogLevel('WARN')
 
 
 
-def main(inputs):
+def main(inputs,start_year,end_year):
 	
 	amazon_schema = types.StructType([
 	types.StructField('marketplace',types.StringType()),
@@ -37,6 +37,24 @@ def main(inputs):
 	input_df.show()
 
 	date_interval=7
+
+	xmas="-12-25"
+	christmas_initial=[]
+	for i in range(start_year,end_year+1):
+		christmas_initial.append(str(i)+xmas)
+
+	rem_day="-11-11"
+	remembrance_day_initial=[]
+	for i in range(start_year,end_year+1):
+		remembrance_day_initial.append(str(i)+rem_day)
+
+	new_year_date=["-01-01","-12-31"]
+	new_year_initial=[]
+	for j in new_year_date:
+		for i in range(start_year,end_year+1):
+			new_year_initial.append(str(i)+j)
+
+
 	black_friday_initial=[
 				  "1995-11-24",
 				  "1996-11-22",
@@ -84,23 +102,6 @@ def main(inputs):
 				  "2015-11-30"]
 
 
-
-	xmas="-12-25"
-	christmas_initial=[]
-	for i in range(1995,2016):
-		christmas_initial.append(str(i)+xmas)
-
-	rem_day="-11-11"
-	remembrance_day_initial=[]
-	for i in range(1995,2016):
-		remembrance_day_initial.append(str(i)+rem_day)
-
-	new_year_date=["-01-01","-12-31"]
-	new_year_initial=[]
-	for j in new_year_date:
-		for i in range(1995,2016):
-			new_year_initial.append(str(i)+j)
-
 	thanksgiving_initial=[
 				  "1995-11-23",
 				  "1996-11-28",
@@ -136,11 +137,23 @@ def main(inputs):
 	days_name_initial=[black_friday_initial,cyber_monday_initial,christmas_initial,remembrance_day_initial,new_year_initial,thanksgiving_initial]
 	days_name=[black_friday,cyber_monday,christmas,remembrance_day,new_year,thanksgiving]
 
+	for i in range(6):
+		print(days_name_initial[i])
+		print(len(days_name_initial[i]))
+		print("dddddddddddddddddddddd")
+
+	print("sssssssssssssssssssssssssssssssss")
+
+
+
 	for day_initial,day in zip(days_name_initial,days_name):
 		for j in day_initial:
-			for i in range(date_interval):
-				date_obj=datetime.datetime.strptime(j,'%Y-%m-%d')+datetime.timedelta(i)
-				day.append(date_obj.strftime('%Y-%m-%d'))
+			new_date_formatted=datetime.datetime.strptime(j,'%Y-%m-%d')
+			year_j=new_date_formatted.year
+			if(year_j>=start_year and year_j<=end_year):
+				for i in range(date_interval):
+					date_obj=new_date_formatted+datetime.timedelta(i)
+					day.append(date_obj.strftime('%Y-%m-%d'))
 
 	days_name_string=["Black Friday","Cyber Monday","Christmas Eve","Remembrance Day","New Year","Thanksgiving Day"]
 	y=0	
@@ -155,6 +168,17 @@ def main(inputs):
 
 
 
+	for i in range(6):
+		print(days_name[i])
+		print(len(days_name[i]))
+		print("dddddddddddddddddddddd")
+
+	print("sssssssssssssssssssssssssssssssss")
+
+
+
 if __name__ == '__main__':
 	inputs = sys.argv[1]
-	main(inputs)
+	start_year=int(sys.argv[2])
+	end_year=int(sys.argv[3])
+	main(inputs,start_year,end_year)
