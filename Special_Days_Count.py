@@ -36,7 +36,14 @@ def main(inputs):
 	input_df.registerTempTable("input_df")
 	input_df.show()
 
-	black_friday=["2000-11-24",
+	date_interval=7
+	black_friday_initial=[
+				  "1995-11-24",
+				  "1996-11-22",
+				  "1997-11-28",
+				  "1998-11-27",
+				  "1999-11-26",
+				  "2000-11-24",
 				  "2001-11-23",
 				  "2002-11-29",
 				  "2003-11-28",
@@ -53,7 +60,13 @@ def main(inputs):
 				  "2014-11-28",
 				  "2015-11-27"]
 
-	cyber_monday=["2000-11-27",
+	cyber_monday_initial=[
+				  "1995-11-27",
+				  "1996-11-26",
+				  "1997-12-01",
+				  "1998-11-30",
+				  "1999-11-29",
+				  "2000-11-27",
 				  "2001-11-26",
 				  "2002-12-01",
 				  "2003-12-01",
@@ -70,23 +83,31 @@ def main(inputs):
 				  "2014-12-01",
 				  "2015-11-30"]
 
+
+
 	xmas="-12-25"
-	christmas=[]
-	for i in range(2000,2016):
-		christmas.append(str(i)+xmas)
+	christmas_initial=[]
+	for i in range(1995,2016):
+		christmas_initial.append(str(i)+xmas)
 
 	rem_day="-11-11"
-	remembrance_day=[]
-	for i in range(2000,2016):
-		remembrance_day.append(str(i)+rem_day)
+	remembrance_day_initial=[]
+	for i in range(1995,2016):
+		remembrance_day_initial.append(str(i)+rem_day)
 
 	new_year_date=["-01-01","-12-31"]
-	new_year=[]
+	new_year_initial=[]
 	for j in new_year_date:
-		for i in range(2000,2016):
-			new_year.append(str(i)+j)
+		for i in range(1995,2016):
+			new_year_initial.append(str(i)+j)
 
-	thanksgiving=["2000-10-09",
+	thanksgiving_initial=[
+				  "1995-11-23",
+				  "1996-11-28",
+				  "1997-11-27",
+				  "1998-11-26",
+				  "1999-11-25",
+				  "2000-10-09",
 				  "2001-10-08",
 				  "2002-10-14",
 				  "2003-10-13",
@@ -103,12 +124,31 @@ def main(inputs):
 				  "2014-10-13",
 				  "2015-10-12"]
 
+
+
+	black_friday=[]
+	cyber_monday=[]
+	christmas=[]
+	remembrance_day=[]
+	new_year=[]
+	thanksgiving=[]
+
+	days_name_initial=[black_friday_initial,cyber_monday_initial,christmas_initial,remembrance_day_initial,new_year_initial,thanksgiving_initial]
 	days_name=[black_friday,cyber_monday,christmas,remembrance_day,new_year,thanksgiving]
+
+	for day_initial,day in zip(days_name_initial,days_name):
+		for j in day_initial:
+			for i in range(date_interval):
+				date_obj=datetime.datetime.strptime(j,'%Y-%m-%d')+datetime.timedelta(i)
+				day.append(date_obj.strftime('%Y-%m-%d'))
+
 	days_name_string=["Black Friday","Cyber Monday","Christmas Eve","Remembrance Day","New Year","Thanksgiving Day"]
 	y=0	
-
 	for x in days_name:
 		query=spark.sql("SELECT * from input_df where {} IN {}".format("review_date",tuple(x)))
+		print(days_name_string[y],": ",query.count())
+		query.show()
+		query=spark.sql("SELECT review_date,review_body from input_df where {} IN {} OR UPPER(review_body) LIKE UPPER('%{}%') ".format("review_date",tuple(x),days_name_string[y]))
 		print(days_name_string[y],": ",query.count())
 		y=y+1
 		query.show()
@@ -116,6 +156,5 @@ def main(inputs):
 
 
 if __name__ == '__main__':
-	
 	inputs = sys.argv[1]
 	main(inputs)
