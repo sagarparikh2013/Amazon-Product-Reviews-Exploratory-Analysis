@@ -1,28 +1,20 @@
 import sys
 import os
-
-
-
-#assert sys.version_info >= (3, 5) # make sure we have Python 3.5+
-# from datetime import datetime
 import numpy as np
 import pandas as pd
 from os import path
 from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import matplotlib.pyplot as plt
-
-
 from dateutil.parser import parse
 import datetime
 from pyspark.sql import SparkSession, functions, types
 from pyspark.sql.functions import col, from_unixtime,broadcast,udf,year,countDistinct,date_format,count
 spark = SparkSession.builder.appName('Read Parquets S3 Categories ').getOrCreate()
-#assert spark.version >= '2.3' # make sure we have Spark 2.3+
 sc = spark.sparkContext
 sc.setLogLevel('WARN')
 
-def main(inputs,start_year,end_year):
+def main(inputs):
 	amazon_schema = types.StructType([
 	types.StructField('marketplace',types.StringType()),
 	types.StructField('customer_id',types.IntegerType()),
@@ -79,14 +71,6 @@ def main(inputs,start_year,end_year):
 	plt.show()
 
 
-# def transform_format(val):
-# 	if val.all() == 0:
-# 		return 255
-# 	else:
-# 		return val
-
 if __name__ == '__main__':
 	inputs = sys.argv[1]
-	start_year=int(sys.argv[2])
-	end_year=int(sys.argv[3])
-	main(inputs,start_year,end_year)
+	main(inputs)
