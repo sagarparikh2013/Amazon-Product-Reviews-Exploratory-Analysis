@@ -71,6 +71,13 @@ def main(inputs,start_year,end_year):
 	plt.show()
 	wordcloud.to_file(save_as_name)
 
+	#Provides new image similar to the background image
+	image_colors = ImageColorGenerator(cloud_mask)
+	plt.imshow(wordcloud.recolor(color_func=image_colors), interpolation="bilinear")
+	plt.axis("off")
+	plt.savefig("img/us_wine.png", format="png")
+	plt.show()
+
 
 # def transform_format(val):
 # 	if val.all() == 0:
