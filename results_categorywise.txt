@@ -1,0 +1,23 @@
+lowest
+------
+
+mobile_electronics : 3.83
+
+wireless : 3.9
+
+Digital_Software : 3.59
+
+Software : 3.9
+
+
+Highest
+----------
+
+Gift Cards : 4.75
+
+Digital Music : 4.69
+
+Video DVD : 4.55
+
+
+Average of All : 4.24
