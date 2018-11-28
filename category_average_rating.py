@@ -8,7 +8,7 @@ assert sys.version_info >= (3, 5)   # make sure we have Python 3.5+
 
 def main(inputs):
     reviews_df = utilities.get_completereviews_dataframe(spark)
-    # reviews_df = spark.read.csv(sep='\t', path=inputs, schema=utilities.REVIEWS_SCHEMA)
+    #reviews_df = spark.read.csv(sep='\t', path=inputs, schema=utilities.REVIEWS_SCHEMA)
     reviews_df = reviews_df.filter(reviews_df.product_id.isNotNull())
 
     aggregated_df = reviews_df.groupBy(reviews_df.product_category).agg(functions.avg('star_rating').alias('average')).cache()
@@ -20,7 +20,7 @@ def main(inputs):
     y_values_high = range(len(labels_high))
 
     plt.barh(y_values_high, labels_high)
-    plt.yticks(y_values_high, x_values_high, rotation='90')
+    plt.yticks(y_values_high, x_values_high)
     plt.xlabel('Star Rating of an average product')
     plt.ylabel('Categories')
     plt.title('Categories wise average ratings')
