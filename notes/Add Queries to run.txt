@@ -1,11 +1,12 @@
 RAW DATA:
 	ETL Process:
 		Remove Duplicates (Distinct)
-		Filter upon YEARS (Upon Reviews)
-		Filter 10 user core
-		Filter 10 products core
-		Join (Broadcast)
-		Bought Together
+		Filter upon YEARS (Upon Reviews) - on given year range
+		#Filter 10 user core
+		Filter 10 products core - only this one.
+		
+		#Join (Broadcast)
+		#Bought Together
 
 
 QUERIES:
@@ -13,10 +14,12 @@ QUERIES:
 	Most related words used in a category (like sound quality in reviews in earphone category)
 	No of questions asked per product and answered (: Does this laptop has 8gb ram)
 	Year wise reviews chart
-	Date wise chart: Christmas, Boxing day, Blak Friday, Summer period, Winter Period
+	Date wise chart: Christmas, Boxing day, Black Friday, Summer period, Winter Period
 
 
 	ML Part:
+	Sentiment Analsysis of reviews using NLTK
+	Topic Modelling
 	Correlation among features
 	Predicting sales on days like Black Friday, Boxing day
 	
