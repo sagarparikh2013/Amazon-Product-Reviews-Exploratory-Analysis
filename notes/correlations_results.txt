@@ -1,0 +1,3 @@
+Correlation between review helpfulness and star rating  : 0.2657433509768233  (weakly correlated)
+Correlation between review length and star rating 		: 0.03271541560033123      (no correlation)
+Correlation between review length and review helpfulness: 0.09449442577402431 (no correlation)
