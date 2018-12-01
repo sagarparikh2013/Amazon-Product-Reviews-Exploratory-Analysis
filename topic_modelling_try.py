@@ -1,15 +1,25 @@
 import sys
 import os
-#assert sys.version_info >= (3, 5) # make sure we have Python 3.5+
+
 from datetime import datetime
 from pyspark.sql import SparkSession, functions, types
 from pyspark.sql.functions import col, from_unixtime,broadcast,udf,year
 from pyspark.mllib.util import MLUtils
-from pyspark.mllib.clustering import LDA
-from pyspark.ml.feature import CountVectorizer, CountVectorizerModel, Tokenizer, RegexTokenizer, StopWordsRemover
+
+# stuff we'll need for text processing
+from nltk.corpus import stopwords
+import re as re
+from pyspark.ml.feature import CountVectorizer , IDF
+# stuff we'll need for building the model
+
+from pyspark.mllib.linalg import Vector, Vectors as MLlibVectors
+from pyspark.mllib.clustering import LDA as MLlibLDA, LDAModel
+from pyspark.ml.clustering import LDA
+from pyspark.ml.feature import CountVectorizerModel, Tokenizer, RegexTokenizer, StopWordsRemover
 from pyspark.ml import Pipeline
-spark = SparkSession.builder.appName('Read Parquets S3 Categories').getOrCreate()
-#assert spark.version >= '2.3' # make sure we have Spark 2.3+
+from nltk.corpus import stopwords
+
+spark = SparkSession.builder.appName('Topic Modelling LDA').getOrCreate()
 sc = spark.sparkContext
 sc.setLogLevel('WARN')
 
@@ -39,6 +49,55 @@ def main(inputs):
     #input_df.show()
     #print("No of rows in input dataset:",inputs," is:",input_df.count())
 
+    StopWords = stopwords.words("english")
+
+    tokens = input_df.rdd.map(lambda x: x['review_headline'])\
+    .filter(lambda x: x is not None)\
+    .map( lambda document: document.strip().lower())\
+    .map( lambda document: re.split(" ", document))\
+    .map( lambda word: [x for x in word if x.isalpha()])\
+    .map( lambda word: [x for x in word if len(x) > 3] )\
+    .map( lambda word: [x for x in word if x not in StopWords])\
+    .zipWithIndex()
+
+
+    df_txts = spark.createDataFrame(tokens, ["list_of_words",'index'])
+
+    # TF
+    cv = CountVectorizer(inputCol="list_of_words", outputCol="raw_features", vocabSize=5000, minDF=10.0)
+    cvmodel = cv.fit(df_txts)
+    result_cv = cvmodel.transform(df_txts)
+    
+    # IDF
+    idf = IDF(inputCol="raw_features", outputCol="features")
+    idfModel = idf.fit(result_cv)
+    result_tfidf = idfModel.transform(result_cv) 
+
+    #result_tfidf.show()
+
+    num_topics = 10
+    max_iterations = 100
+    lda = LDA(k=num_topics, maxIter=max_iterations)
+    lda_model = lda.fit(result_tfidf.select('index','features'))
+    
+    wordNumbers = 5  
+    # topicIndices = sc.parallelize(lda_model.describeTopics(maxTermsPerTopic = wordNumbers))
+    topics = lda_model.describeTopics(maxTermsPerTopic = wordNumbers)    
+    topics.show(truncate=False)
+    def topic_render(topic):
+        terms = topic[0]
+        result = []
+        for i in range(wordNumbers):
+            term = vocabArray[terms[i]]
+            result.append(term)
+        return result
+    topics_final = topicIndices.map(lambda topic: topic_render(topic)).collect()
+    for topic in range(len(topics_final)):
+        print ("Topic" + str(topic) + ":")
+        for term in topics_final[topic]:
+            print (term)
+        print ('\n')
+    """
     tokenizer = Tokenizer(inputCol="review_headline", outputCol="words")
     wordsDataFrame = tokenizer.transform(input_df)
     wordsDataFrame.select('product_id','product_category','star_rating','review_headline','words').show()
@@ -86,7 +145,7 @@ def main(inputs):
         weights = topic[1]
         for n in range(len(words)):
             print (cvmodel.vocabulary[words[n]] + ' ' + str(weights[n]))
-
+    """
 if __name__ == '__main__':
     inputs = sys.argv[1]
     # output = sys.argv[2]
