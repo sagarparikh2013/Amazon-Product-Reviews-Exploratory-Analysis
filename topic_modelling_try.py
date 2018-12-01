@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 
 from datetime import datetime
 from pyspark.sql import SparkSession, functions, types
@@ -48,8 +49,8 @@ def main(inputs):
     input_df = input_df.repartition(96) 
     #input_df.show()
     #print("No of rows in input dataset:",inputs," is:",input_df.count())
-
     StopWords = stopwords.words("english")
+    start_time = time.time()
 
     tokens = input_df.rdd.map(lambda x: x['review_headline'])\
     .filter(lambda x: x is not None)\
@@ -60,6 +61,7 @@ def main(inputs):
     .map( lambda word: [x for x in word if x not in StopWords])\
     .zipWithIndex()
 
+    print("---Ran Map functions in %s seconds ---" % (time.time() - start_time))
 
     df_txts = spark.createDataFrame(tokens, ["list_of_words",'index'])
 
@@ -68,10 +70,13 @@ def main(inputs):
     cvmodel = cv.fit(df_txts)
     result_cv = cvmodel.transform(df_txts)
     
+    print("---TF in %s seconds ---" % (time.time() - start_time))
+
     # IDF
     idf = IDF(inputCol="raw_features", outputCol="features")
     idfModel = idf.fit(result_cv)
     result_tfidf = idfModel.transform(result_cv) 
+    print("---IDF in %s seconds ---" % (time.time() - start_time))
 
     #result_tfidf.show()
 
@@ -79,24 +84,34 @@ def main(inputs):
     max_iterations = 100
     lda = LDA(k=num_topics, maxIter=max_iterations)
     lda_model = lda.fit(result_tfidf.select('index','features'))
-    
+    print("---LDA model fit in %s seconds ---" % (time.time() - start_time))
+
     wordNumbers = 5  
-    # topicIndices = sc.parallelize(lda_model.describeTopics(maxTermsPerTopic = wordNumbers))
+    #topicIndices = sc.parallelize(lda_model.describeTopics(maxTermsPerTopic = wordNumbers))
+    
     topics = lda_model.describeTopics(maxTermsPerTopic = wordNumbers)    
-    topics.show(truncate=False)
+    #topics.show(truncate=False)
+    print("---topics describe model fit in %s seconds ---" % (time.time() - start_time))
+
     def topic_render(topic):
         terms = topic[0]
         result = []
         for i in range(wordNumbers):
-            term = vocabArray[terms[i]]
+            term = result_tfidf.index[terms[i]]
             result.append(term)
         return result
-    topics_final = topicIndices.map(lambda topic: topic_render(topic)).collect()
+    #topics_final = topicIndices.map(lambda topic: topic_render(topic)).collect()
+
+    topics_final = topics.rdd.map(lambda topic: topic_render(topic)).collect()
+    print("---Topics Final in %s seconds ---" % (time.time() - start_time))
+
     for topic in range(len(topics_final)):
         print ("Topic" + str(topic) + ":")
         for term in topics_final[topic]:
             print (term)
         print ('\n')
+    print("---FINAL PRINT in %s seconds ---" % (time.time() - start_time))
+
     """
     tokenizer = Tokenizer(inputCol="review_headline", outputCol="words")
     wordsDataFrame = tokenizer.transform(input_df)
