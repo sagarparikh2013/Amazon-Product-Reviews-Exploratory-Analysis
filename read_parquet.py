@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 from pyspark.sql import SparkSession, functions, types
 from pyspark.sql.functions import col, from_unixtime,broadcast,udf,year
-spark = SparkSession.builder.appName('Read Parquets S3 Categories ').getOrCreate()
+spark = SparkSession.builder.appName('Read Parquets/CSVs').getOrCreate()
 #assert spark.version >= '2.3' # make sure we have Spark 2.3+
 sc = spark.sparkContext
 sc.setLogLevel('WARN')
@@ -30,55 +30,21 @@ def main(inputs):
     types.StructField('review_body',types.StringType()),
     types.StructField('review_date',types.DateType())])
 
+    #For reading CSV input files partitioned on Product Categories
+    #input_df = spark.read.option('sep','\t').csv(inputs,header='true')
+
+    #For reading Parquet input files partitioned on Product Categories
     input_df = spark.read.parquet(inputs)
     input_df = input_df.repartition(96) 
-    #input_df.show()
-    print("No of rows in input dataset:",inputs," is:",input_df.count())
-
-    df_without_null_reviews = input_df.filter(functions.length(col('review_body'))==0)
-    print("No of rows in df_without_null_reviews is:",df_without_null_reviews.count())
-    df_without_null_reviews.show()
-    """
-
-    raw_dataset = spark.read.option('sep','\t').csv(inputs,schema=amazon_schema,header='true')
-    #raw_dataset = raw_dataset.repartition(40).cache()
+    #input_df.write.partitionBy('product_category').option("header","true").csv("csv_1995_2000")
     
-    raw_dataset.show()
-    
-    print("No of rows in raw_dataset:",raw_dataset.count())
 
-    #Keeping only those rows which are verified purchases
-    verified_purchases_df = raw_dataset.filter(col('verified_purchase')=="Y")
-    verified_purchases_df.show()
-    print("No of rows in verified_purchases_df:",verified_purchases_df.count())
+    input_df.show()
+    #final_df = input_df.withColumn("product_category",functions.lit('Electronics'))
+    #final_df.show()
+    #final_df.write.option('header','true').csv('electronics_csv')
+    #print("No of rows in input dataset:",inputs," is:",input_df.count())
 
-    
-    #10-core products only - Keeping only the products which have more than 10 reviews
-    product_count = verified_purchases_df.groupby('product_id').count().filter(col('count')>10)
-    #product_count.show()
-    #print("No of Unique Products:",product_count.count())
-    ten_core_dataset = verified_purchases_df.join(broadcast(product_count.select('product_id')),on='product_id')
-    ten_core_dataset.registerTempTable('ten_core_dataset')
-    ten_core_dataset.show()
-
-    print("No of rows in ten_core_dataset:",ten_core_dataset.count())
-
-    
-    # #Converting given time to datetime format
-    # dateUDF = udf(lambda reviewTime: datetime.strptime(reviewTime,"%m %d, %Y"),types.DateType())
-    # transformed_date_df = raw_dataset.select('reviewerID','asin','reviewerName','helpful','reviewText','overall','summary',dateUDF(col('reviewTime')).alias('date_time'))
-    # transformed_date_df.registerTempTable('transformed_data')
-    # print("No of rows in transformed_date_df:",transformed_date_df.count())
-
-    #Selecting data in the given time range
-    sliced_data = spark.sql("SELECT * from ten_core_dataset WHERE year(review_date) BETWEEN "+start_year+" AND "+end_year)
-    sliced_data.show()
-
-    print("No of rows in sliced_dataset:",sliced_data.count())
-
-    sliced_data.write.partitionBy('product_category').parquet(output)
-    #final_df.write.json(output)
-    """
 if __name__ == '__main__':
     inputs = sys.argv[1]
     # output = sys.argv[2]
