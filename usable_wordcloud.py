@@ -14,30 +14,8 @@ spark = SparkSession.builder.appName('WordCloud').getOrCreate()
 sc = spark.sparkContext
 sc.setLogLevel('WARN')
 
-def main(inputs,category):
-	amazon_schema = types.StructType([
-	types.StructField('marketplace',types.StringType()),
-	types.StructField('customer_id',types.IntegerType()),
-	types.StructField('review_id',types.StringType()),
-	types.StructField('product_id',types.StringType()),
-	types.StructField('product_parent',types.LongType()),
-	types.StructField('product_title',types.StringType()),
-	types.StructField('product_category',types.StringType()),
-	types.StructField('star_rating',types.IntegerType()),
-	types.StructField('helpful_votes',types.IntegerType()),
-	types.StructField('total_votes',types.IntegerType()),
-	types.StructField('vine',types.StringType()),
-	types.StructField('verified_purchase',types.StringType()),
-	types.StructField('review_headline',types.StringType()),
-	types.StructField('review_body',types.StringType()),
-	types.StructField('review_date',types.DateType())])
-
-	input_df = spark.read.parquet(inputs).cache()
-	# input_df = input_df.repartition(960).cache()
-	input_df.registerTempTable("input_df")
-	get_reviews= spark.sql("SELECT review_body FROM input_df")
-
-	text_review=get_reviews.collect()
+def create_wordcloud(wordcloud_df,category,holiday_name):
+	text_review=wordcloud_df.select('review_body').collect()
 
 	stopwords = set(STOPWORDS)
 	stopwords.update(["take","look","put","around","Row","review_body","br","quot","although","now","one","give","saying","say","well","new","made","much","make","got","each","take","use","may","without","part","want","makes","even","many","used","yet","going","set","come","go","found","another","seem"])
@@ -45,7 +23,7 @@ def main(inputs,category):
 
 	#Add Details for Cloud
 	font_path = "fonts/forbes_bold.ttf"
-	image_name = category+"_wordcloud.png"
+	image_name = holiday_name+"_"+category+"_wordcloud.png"
 	#cloud_mask = np.array(Image.open(image_name))
 	width=1500
 	height=1000
@@ -65,15 +43,7 @@ def main(inputs,category):
 	plt.show()
 	wordcloud.to_file(save_as_name)
 
-	# #Provides new image similar to the background image
-	# image_colors = ImageColorGenerator(cloud_mask)
-	# plt.imshow(wordcloud.recolor(color_func=image_colors), interpolation="bilinear")
-	# plt.axis("off")
-	# plt.savefig("figures/.png", format="png")
-	# plt.show()
-
-
-if __name__ == '__main__':
-	inputs = sys.argv[1]
-	category = sys.argv[2]
-	main(inputs,category)
+# if __name__ == '__main__':
+# 	inputs = sys.argv[1]
+# 	category = sys.argv[2]
+# 	main(inputs,category)

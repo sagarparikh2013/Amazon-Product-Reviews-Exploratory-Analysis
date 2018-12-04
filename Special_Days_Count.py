@@ -6,12 +6,13 @@ from dateutil.parser import parse
 import datetime
 from pyspark.sql import SparkSession, functions, types
 from pyspark.sql.functions import col, from_unixtime,broadcast,udf,year,countDistinct,date_format,count
-spark = SparkSession.builder.appName('Read Parquets S3 Categories ').getOrCreate()
+spark = SparkSession.builder.appName('Special Days Count').getOrCreate()
+from usable_wordcloud import create_wordcloud
 #assert spark.version >= '2.3' # make sure we have Spark 2.3+
 sc = spark.sparkContext
 sc.setLogLevel('WARN')
 
-def main(inputs,start_year,end_year):
+def main(inputs,start_year,end_year,category):
 	amazon_schema = types.StructType([
 	types.StructField('marketplace',types.StringType()),
 	types.StructField('customer_id',types.IntegerType()),
@@ -31,7 +32,7 @@ def main(inputs,start_year,end_year):
 
 	input_df = spark.read.parquet(inputs).cache()
 	input_df.registerTempTable("input_df")
-	input_df.show()
+	#input_df.show()
 
 	date_interval=7
 
@@ -152,11 +153,12 @@ def main(inputs,start_year,end_year):
 
 	days_name_string=["Black Friday","Cyber Monday","Christmas Eve","Remembrance Day","New Year","Thanksgiving Day"]
 	y=0	
-	for x in days_name:
-		# query=spark.sql("SELECT * from input_df where {} IN {}".format("review_date",tuple(x)))
+	for special_day in days_name:
+		# query=spark.sql("SELECT * from input_df where {} IN {}".format("review_date",tuple(special_day)))
 		# print(days_name_string[y],": ",query.count())
 		# query.show()
-		query=spark.sql("SELECT * from input_df where {} IN {} OR UPPER(review_body) LIKE UPPER('%{}%') ".format("review_date",tuple(x),days_name_string[y]))
+		query=spark.sql("SELECT * from input_df where {} IN {} OR UPPER(review_body) LIKE UPPER('%{}%') ".format("review_date",tuple(special_day),days_name_string[y]))
+		create_wordcloud(query,category,days_name_string[y])
 		print(days_name_string[y],": ",query.count())
 		y=y+1
 		query.show()
@@ -174,4 +176,5 @@ if __name__ == '__main__':
 	inputs = sys.argv[1]
 	start_year=int(sys.argv[2])
 	end_year=int(sys.argv[3])
-	main(inputs,start_year,end_year)
+	category = sys.argv[4]
+	main(inputs,start_year,end_year,category)
