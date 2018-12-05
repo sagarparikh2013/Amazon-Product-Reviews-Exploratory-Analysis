@@ -3,8 +3,13 @@ import os
 #assert sys.version_info >= (3, 5) # make sure we have Python 3.5+
 from datetime import datetime
 from pyspark.sql import SparkSession, functions, types
-from pyspark.sql.functions import col, from_unixtime,broadcast,udf,year
-spark = SparkSession.builder.appName('Read Parquets/CSVs').getOrCreate()
+from pyspark.sql.functions import col,count,length
+import pandas as pd
+# %matplotlib inline
+import random
+import matplotlib.pyplot as plt
+
+spark = SparkSession.builder.appName('Length of Review vs Ratings').getOrCreate()
 #assert spark.version >= '2.3' # make sure we have Spark 2.3+
 sc = spark.sparkContext
 sc.setLogLevel('WARN')
@@ -30,25 +35,29 @@ def main(inputs):
     types.StructField('review_body',types.StringType()),
     types.StructField('review_date',types.DateType())])
 
-    #For reading CSV input files partitioned on Product Categories
-    #input_df = spark.read.option('sep','\t').csv(inputs,header='true')
-
-    #For reading Parquet input files partitioned on Product Categories
     input_df = spark.read.parquet(inputs)
-    input_df = input_df.repartition(96) 
-    #input_df.write.partitionBy('product_category').option("header","true").csv("csv_1995_2000")
+    input_df = input_df.repartition(96).cache()
+
+    length_review_vs_rating_df = input_df.groupBy('star_rating').\
+    agg(functions.avg(length(col('review_body'))).alias('avg_length')).orderBy('star_rating')
+
     
+    #length_review_vs_rating_df.write.csv('length_of_review_vs_rating.csv')
 
-    input_df.show()
-    #final_df = input_df.withColumn("product_category",functions.lit('Electronics'))
-    #final_df.show()
-    #final_df.write.option('header','true').csv('electronics_csv')
-    #print("No of rows in input dataset:",inputs," is:",input_df.count())
+    length_review_vs_rating_dict = length_review_vs_rating_df.rdd.collectAsMap()
+    
+    x_array = list(length_review_vs_rating_dict.keys())
+    y_array = list(length_review_vs_rating_dict.values())
 
+    plt.bar(x_array, y_array)
+    plt.xlabel('Ratings of products on Amazon')
+    plt.ylabel('Average length of review')
+    plt.title('Average length of review vs Rating on Amazon')
+    plt.savefig('avg_review_length_vs_rating.png')
+    plt.show()
+    
 if __name__ == '__main__':
+    
     inputs = sys.argv[1]
-    # output = sys.argv[2]
-    # start_year = sys.argv[3]
-    # end_year = sys.argv[4]
     main(inputs)
 

@@ -163,13 +163,6 @@ def main(inputs,start_year,end_year,category):
 		y=y+1
 		query.show()
 
-	# for i in range(6):
-	# 	print(days_name[i])
-	# 	print(len(days_name[i]))
-	# 	print("dddddddddddddddddddddd")
-
-	# print("sssssssssssssssssssssssssssssssss")
-
 
 
 if __name__ == '__main__':

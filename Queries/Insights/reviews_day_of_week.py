@@ -4,13 +4,10 @@ import os
 from datetime import datetime
 from pyspark.sql import SparkSession, functions, types
 from pyspark.sql.functions import col, from_unixtime,broadcast,udf,year,countDistinct,date_format,count
-import plotly.plotly as py
-import plotly.graph_objs as go
 import pandas as pd
 # %matplotlib inline
 import random
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 spark = SparkSession.builder.appName('Queries on Reviews').getOrCreate()
 #assert spark.version >= '2.3' # make sure we have Spark 2.3+
