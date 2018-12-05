@@ -18,22 +18,6 @@ sc.setLogLevel('WARN')
 
 def main(inputs):
     
-    amazon_schema = types.StructType([
-    types.StructField('marketplace',types.StringType()),
-    types.StructField('customer_id',types.IntegerType()),
-    types.StructField('review_id',types.StringType()),
-    types.StructField('product_id',types.StringType()),
-    types.StructField('product_parent',types.LongType()),
-    types.StructField('product_title',types.StringType()),
-    types.StructField('product_category',types.StringType()),
-    types.StructField('star_rating',types.IntegerType()),
-    types.StructField('helpful_votes',types.IntegerType()),
-    types.StructField('total_votes',types.IntegerType()),
-    types.StructField('vine',types.StringType()),
-    types.StructField('verified_purchase',types.StringType()),
-    types.StructField('review_headline',types.StringType()),
-    types.StructField('review_body',types.StringType()),
-    types.StructField('review_date',types.DateType())])
 
     input_df = spark.read.parquet(inputs)
     input_df = input_df.repartition(96).cache()
@@ -50,12 +34,14 @@ def main(inputs):
     products_per_category = input_df.groupBy('product_category').agg(countDistinct(col('product_id')).alias('Unique Products Count'))
     products_per_category.show()
 
+    #Reviews count per year
     reviews_count_vs_years = input_df.groupBy(year('review_date').alias('year')).count().orderBy('year')
     reviews_count_vs_years.show()
     reviews_count_vs_years.write.csv('reviews_count_vs_years_'+inputs)
     reviews_count_vs_years_plot = reviews_count_vs_years.toPandas().plot(x='year',y='count').get_figure()
     #reviews_count_vs_years_plot.savefig('figures/reviews_count_vs_years_'+inputs+'.png')
 
+    #Reviews on each day of the week
     counts_per_day_of_week = input_df.groupBy(date_format('review_date','EEEE').alias('dayOfWeek')).count()
     counts_per_day_of_week.show()
     day_with_max_reviews = counts_per_day_of_week.first()

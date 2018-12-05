@@ -18,23 +18,6 @@ sc.setLogLevel('WARN')
 
 def main(inputs):
     
-    amazon_schema = types.StructType([
-    types.StructField('marketplace',types.StringType()),
-    types.StructField('customer_id',types.IntegerType()),
-    types.StructField('review_id',types.StringType()),
-    types.StructField('product_id',types.StringType()),
-    types.StructField('product_parent',types.LongType()),
-    types.StructField('product_title',types.StringType()),
-    types.StructField('product_category',types.StringType()),
-    types.StructField('star_rating',types.IntegerType()),
-    types.StructField('helpful_votes',types.IntegerType()),
-    types.StructField('total_votes',types.IntegerType()),
-    types.StructField('vine',types.StringType()),
-    types.StructField('verified_purchase',types.StringType()),
-    types.StructField('review_headline',types.StringType()),
-    types.StructField('review_body',types.StringType()),
-    types.StructField('review_date',types.DateType())])
-
     input_df = spark.read.parquet(inputs)
     input_df = input_df.repartition(96).cache()
 
