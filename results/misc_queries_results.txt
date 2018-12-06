@@ -1,0 +1,9 @@
+Mean number of words for most helpful reviews : 105
+
+Standard deviation of number of words for most helpful reviews : 154
+
+Median number of words in most helpful reivews : 4931
+
+Total customers in the dataset : 21928372  	(roughly 22 million)
+
+Total products in the dataset : 1596467     (roughly 1.6 million)

@@ -1,0 +1,132 @@
+import datetime
+
+
+start_year=1996
+end_year=2013
+
+
+date_interval=7
+
+xmas="-12-25"
+christmas_initial=[]
+for i in range(start_year,end_year+1):
+	christmas_initial.append(str(i)+xmas)
+
+rem_day="-11-11"
+remembrance_day_initial=[]
+for i in range(start_year,end_year+1):
+	remembrance_day_initial.append(str(i)+rem_day)
+
+new_year_date=["-01-01","-12-31"]
+new_year_initial=[]
+for j in new_year_date:
+	for i in range(start_year,end_year+1):
+		new_year_initial.append(str(i)+j)
+
+
+black_friday_initial=[
+			  "1995-11-24",
+			  "1996-11-22",
+			  "1997-11-28",
+			  "1998-11-27",
+			  "1999-11-26",
+			  "2000-11-24",
+			  "2001-11-23",
+			  "2002-11-29",
+			  "2003-11-28",
+			  "2004-11-26",
+			  "2005-11-25",
+			  "2006-11-24",
+			  "2007-11-23",
+			  "2008-11-28",
+			  "2009-11-27",
+			  "2010-11-26",
+			  "2011-11-25",
+			  "2012-11-23",
+			  "2013-11-29",
+			  "2014-11-28",
+			  "2015-11-27"]
+
+cyber_monday_initial=[
+			  "1995-11-27",
+			  "1996-11-26",
+			  "1997-12-01",
+			  "1998-11-30",
+			  "1999-11-29",
+			  "2000-11-27",
+			  "2001-11-26",
+			  "2002-12-01",
+			  "2003-12-01",
+			  "2004-11-29",
+			  "2005-11-28",
+			  "2006-11-27",
+			  "2007-11-26",
+			  "2008-12-01",
+			  "2009-11-30",
+			  "2010-11-29",
+			  "2011-11-28",
+			  "2012-11-26",
+			  "2013-12-02",
+			  "2014-12-01",
+			  "2015-11-30"]
+
+
+thanksgiving_initial=[
+			  "1995-11-23",
+			  "1996-11-28",
+			  "1997-11-27",
+			  "1998-11-26",
+			  "1999-11-25",
+			  "2000-10-09",
+			  "2001-10-08",
+			  "2002-10-14",
+			  "2003-10-13",
+			  "2004-10-11",
+			  "2005-10-10",
+			  "2006-10-09",
+			  "2007-10-08",
+			  "2008-10-13",
+			  "2009-10-12",
+			  "2010-10-11",
+			  "2011-10-10",
+			  "2012-10-08",
+			  "2013-10-14",
+			  "2014-10-13",
+			  "2015-10-12"]
+
+
+
+black_friday=[]
+cyber_monday=[]
+christmas=[]
+remembrance_day=[]
+new_year=[]
+thanksgiving=[]
+
+days_name_initial=[black_friday_initial,cyber_monday_initial,christmas_initial,remembrance_day_initial,new_year_initial,thanksgiving_initial]
+days_name=[black_friday,cyber_monday,christmas,remembrance_day,new_year,thanksgiving]
+
+
+for i in range(6):
+	print(days_name_initial[i])
+	print(len(days_name_initial[i]))
+	print("dddddddddddddddddddddd")
+
+print("sssssssssssssssssssssssssssssssss")
+
+
+for day_initial,day in zip(days_name_initial,days_name):
+	for j in day_initial:
+		new_date_formatted=datetime.datetime.strptime(j,'%Y-%m-%d')
+		year_j=new_date_formatted.year
+		if(year_j>=start_year and year_j<=end_year):
+			for i in range(date_interval):
+				date_obj=new_date_formatted+datetime.timedelta(i)
+				day.append(date_obj.strftime('%Y-%m-%d'))
+
+for i in range(6):
+	print(days_name[i])
+	print(len(days_name[i]))
+	print("dddddddddddddddddddddd")
+
+print("sssssssssssssssssssssssssssssssss")
