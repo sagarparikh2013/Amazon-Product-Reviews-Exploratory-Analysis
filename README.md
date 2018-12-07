@@ -1,3 +1,4 @@
+
 # Amazon-Product-Reviews-Exploratory-Analysis
 Exploratory Analysis of Amazon Product Reviews Dataset comprising of various categories spanning over 18 years
 
@@ -14,7 +15,7 @@ brand, categories etc. The metadata is about 3 GB in size.
 Data Analysis:
 As the size of the dataset is huge, ETL (Extraction, Transformation, and Load) process will be used to focus only on reviews in the last few years as well remove duplicate reviews on near identical products. This will also filter out the products which have less than 10 reviews per product.
 
-Using Big Data tools, the aim is to uncover correlations between various features like Price Vs Ratings, Price Vs Review Sentiment, Sales Rank Vs Reviews, Sales Rank Vs Price etc. Tableau or other similar visualization tools will be used for graphing these co-relations.
+Using Big Data tools, the aim is to uncover correlations between various features like Price Vs Ratings, Price Vs Review Sentiment, Sales Rank Vs Reviews, Sales Rank Vs Price etc. Tableau is used for graphing these co-relations.
 
 Intention is also to answer some intriguing questions like below (but not limited to these):
 
