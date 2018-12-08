@@ -85,6 +85,12 @@ python3 lda_topic_modelling.py
 To run this file, have a bricks folder in your path with etl_final_2k_2k5 subfolder containing reviews data in parquet format
 like this: ```path = 'bricks\\etl_final_2k_2k5'```
 
+*topic_modelling_spark.py*
+Topic modelling with Spark MLLib 
+```
+spark-submit topic_modelling_spark.py "/user/parikh/etl_final_1995_2015/product_category=Electronics"
+```
+
 -------------------------------------------
 
 **Queries/Aggregate Queries:**
