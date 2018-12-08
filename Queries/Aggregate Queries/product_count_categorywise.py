@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 import re, string
 import collections
 
-assert sys.version_info >= (3, 5)   # make sure we have Python 3.5+
-
 
 def main(inputs):
     reviews_df = utilities.get_completereviews_dataframe(spark)
@@ -14,7 +12,7 @@ def main(inputs):
     reviews_df.cache()
 
     product_count_df = reviews_df.filter(reviews_df.customer_id.isNotNull()).groupBy('product_category').agg(functions.countDistinct('product_id'))
-    product_count_df.repartition(1).write.mode('overwrite').csv('product_count_categorywise')
+    product_count_df.write.mode('overwrite').csv('product_count_categorywise')
     product_count = product_count_df.rdd.collectAsMap()
     aggregated_dict = collections.OrderedDict(sorted(product_count.items(), reverse=True))
 
@@ -34,10 +32,9 @@ if __name__ == '__main__':
 
     inputs = utilities.COMPLETE_PARQUET_DATAPATH
     #inputs = "D:\\development\\bigdata\\amzn\\sampledata"
-    spark = SparkSession.builder.appName('Helpfulness query').getOrCreate()
+    spark = SparkSession.builder.appName('Category wise products count').getOrCreate()
     sc = spark.sparkContext
     conf = spark.sparkContext.getConf()
-    assert spark.version >= '2.3'  # make sure we have Spark 2.3+
     spark.sparkContext.setLogLevel('WARN')
 
     main(inputs)

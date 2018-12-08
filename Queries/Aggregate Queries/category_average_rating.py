@@ -3,7 +3,6 @@ from pyspark.sql import SparkSession, functions
 import utilities
 import matplotlib.pyplot as plt
 
-assert sys.version_info >= (3, 5)   # make sure we have Python 3.5+
 
 
 def main(inputs):
@@ -12,7 +11,7 @@ def main(inputs):
     reviews_df = reviews_df.filter(reviews_df.product_id.isNotNull())
 
     aggregated_df = reviews_df.groupBy(reviews_df.product_category).agg(functions.avg('star_rating').alias('average')).cache()
-    aggregated_df.repartition(1).write.mode('overwrite').csv('category_wise_average')
+    aggregated_df.write.mode('overwrite').csv('category_wise_average')
 
     aggregated_dict_high = aggregated_df.sort(aggregated_df.average, ascending=False).rdd.collectAsMap()
     x_values_high = list(aggregated_dict_high.keys())
@@ -47,6 +46,5 @@ if __name__ == '__main__':
     spark = SparkSession.builder.appName('Spark Cassandra load logs').getOrCreate()
     sc = spark.sparkContext
     conf = spark.sparkContext.getConf()
-    assert spark.version >= '2.3'  # make sure we have Spark 2.3+
 
     main(inputs)

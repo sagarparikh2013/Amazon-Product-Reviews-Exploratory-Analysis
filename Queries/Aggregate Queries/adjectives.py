@@ -29,7 +29,7 @@ def save_adjectives(df, filename):
     df = spark.createDataFrame(rd, ['adjectives', 'pos']).select('adjectives')
     df = df.groupBy('adjectives').agg(functions.count('adjectives'))
     df.show()
-    df.repartition(1).write.mode('overwrite').csv(filename)
+    df.write.mode('overwrite').csv(filename)
 
 
 def main(inputs):
@@ -50,10 +50,9 @@ def main(inputs):
 if __name__ == '__main__':
     inputs = utilities.COMPLETE_PARQUET_DATAPATH
     # inputs = "/user/parikh/etl_final_1995_2000"
-    spark = SparkSession.builder.appName('Spark Cassandra load logs').getOrCreate()
+    spark = SparkSession.builder.appName('Adjectives').getOrCreate()
     sc = spark.sparkContext
     conf = spark.sparkContext.getConf()
-    assert spark.version >= '2.3'  # make sure we have Spark 2.3+
 
     main(inputs)
 

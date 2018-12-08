@@ -33,7 +33,7 @@ def main(inputs,category):
 	types.StructField('review_date',types.DateType())])
 
 	input_df = spark.read.parquet(inputs).cache()
-	# input_df = input_df.repartition(960).cache()
+	# input_df = input_df.repartition(96).cache()
 	input_df.registerTempTable("input_df")
 	get_reviews= spark.sql("SELECT review_body FROM input_df")
 

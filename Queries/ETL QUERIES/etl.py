@@ -1,12 +1,11 @@
 import sys
 import os
 import time
-#assert sys.version_info >= (3, 5) # make sure we have Python 3.5+
 from datetime import datetime
 from pyspark.sql import SparkSession, functions, types
 from pyspark.sql.functions import col, from_unixtime,broadcast,udf,year
+#Broadcast timeout given to prevent timeout of large joins - currently 10 hrs but should be increased if data increases exponentially to make it scalable
 spark = SparkSession.builder.appName('Amazon Product Categories ETL').config("spark.sql.broadcastTimeout", 36000).getOrCreate()
-#assert spark.version >= '2.3' # make sure we have Spark 2.3+
 sc = spark.sparkContext
 sc.setLogLevel('WARN')
 

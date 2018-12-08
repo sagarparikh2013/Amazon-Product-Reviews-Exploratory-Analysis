@@ -3,8 +3,6 @@ from pyspark.sql import SparkSession, functions
 import utilities
 import matplotlib.pyplot as plt
 
-assert sys.version_info >= (3, 5)   # make sure we have Python 3.5+
-
 
 def main(inputs):
     reviews_df = utilities.get_completereviews_dataframe(spark)
@@ -20,16 +18,15 @@ def main(inputs):
     plt.ylabel('count')
     plt.title('Count of each rating')
     plt.show()
-    plt.savefig('ratings_distribution.png')
+    plt.savefig('../../figures/ratings_distribution.png')
 
 
 if __name__ == '__main__':
 
     inputs = utilities.COMPLETE_PARQUET_DATAPATH
     #inputs = "D:\\development\\bigdata\\amzn\\sampledata\\sample_us.tsv"
-    spark = SparkSession.builder.appName('Spark Cassandra load logs').getOrCreate()
+    spark = SparkSession.builder.appName('Ratings Distribution').getOrCreate()
     sc = spark.sparkContext
     conf = spark.sparkContext.getConf()
-    assert spark.version >= '2.3'  # make sure we have Spark 2.3+
 
     main(inputs)

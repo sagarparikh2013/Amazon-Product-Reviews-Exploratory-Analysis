@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     inputs = utilities.COMPLETE_PARQUET_DATAPATH
     #inputs = "D:\\development\\bigdata\\amzn\\sampledata\\sample_us.tsv"
-    spark = SparkSession.builder.appName('Helpfulness query').getOrCreate()
+    spark = SparkSession.builder.appName('Miscallaneous Queries').getOrCreate()
     sc = spark.sparkContext
     conf = spark.sparkContext.getConf()
     assert spark.version >= '2.3'  # make sure we have Spark 2.3+
