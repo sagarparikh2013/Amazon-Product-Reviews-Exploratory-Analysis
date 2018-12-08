@@ -2,6 +2,7 @@ Queries:
 
 ETL QUERIES:
 1) This script loads the raw dataset from the cluster, performs **ETL** on it, and stores it on the cluster in Parquet format partitioning on product_category. The given configuration enables the script to fully utilize the compute power of the cluster (given that it is not used by other programs) and it should be changed as per cluster specifications: **etl.py**
+
 ```time spark-submit --conf spark.dynamicAllocation.enabled=false --num-executors=96 --executor-cores=16 --executor-memory=100G new_etl.py /user/parikh/amazon_raw_datasets /user/parikh/etl_final_1995_2015 1995 2015 >> final_logs_with_broadcast.txt```
 
 Considering this will be a long running process, it is a good idea to store the logs in a text file to analyse later.
