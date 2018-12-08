@@ -10,6 +10,7 @@ The following commands were entered to get the programs running and achieve the 
 **_Queries:-_**
 
 **Queries/ETL QUERIES:**
+
 1) *etl.py*
 This script loads the raw dataset from the cluster, performs **ETL** on it, and stores it on the cluster in Parquet format partitioning on product_category. The given configuration enables the script to fully utilize the compute power of the cluster (given that it is not used by other programs) and it should be changed as per cluster specifications: 
 
