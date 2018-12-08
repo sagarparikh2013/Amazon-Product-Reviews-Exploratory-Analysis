@@ -1,0 +1,12 @@
+
+No of rows in original dataset: 130M+
+No of rows in sliced_dataset: 81304322 (81M+) 
+
+No of rows in 2010 1549507
+No of rows in 2011 2834496
+No of rows in 2012 6319311
+No of rows in 2013 17680730
+No of rows in 2014 26682663
+No of rows in 2015 26237615
+
+We can see that most of the reviews are highly concentrated towards the recent years only.

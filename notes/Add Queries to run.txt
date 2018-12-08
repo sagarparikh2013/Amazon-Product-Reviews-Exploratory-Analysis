@@ -2,7 +2,6 @@ RAW DATA:
 	ETL Process:
 		Remove Duplicates (Distinct)
 		Filter upon YEARS (Upon Reviews) - on given year range
-		#Filter 10 user core
 		Filter 10 products core - only this one.
 		
 		#Join (Broadcast)
@@ -27,9 +26,6 @@ QUERIES:
 
 Tableau:
 Reviews vs Ratings
-Sales-Rank
-Reviews vs Price
-Rating vs Price
 Most useful reviews
 Users rated vs users reviewing
 

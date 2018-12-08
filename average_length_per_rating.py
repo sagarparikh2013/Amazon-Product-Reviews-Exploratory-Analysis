@@ -23,7 +23,7 @@ def main(inputs):
 
     reviews_df = reviews_df.filter(reviews_df.product_id.isNotNull()).withColumn('length_words', word_count(reviews_df.review_body))
     avg_length_df = reviews_df.groupBy('star_rating').agg(functions.avg('length_words').alias('avg_length_words')).select('star_rating','avg_length_words').cache()
-    avg_length_df.repartition(1).write.mode('overwrite').csv('avg_length_per_rating')
+    avg_length_df.write.mode('overwrite').csv('avg_length_per_rating')
 
     avg_length_dict = avg_length_df.rdd.collectAsMap()
 

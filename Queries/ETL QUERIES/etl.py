@@ -47,7 +47,6 @@ def main(inputs,output,start_year,end_year):
     ten_core_dataset = verified_purchases_df.join(broadcast(product_count.select('product_id')),on='product_id')
     ten_core_dataset.registerTempTable('ten_core_dataset')
     #print("No of rows in ten_core_dataset:",ten_core_dataset.count())
-
     #Selecting data in the given time range
     sliced_data = spark.sql("SELECT * from ten_core_dataset WHERE year(review_date) BETWEEN "+start_year+" AND "+end_year)
     #sliced_data = spark.sql("SELECT * from ten_core_dataset WHERE year(review_date) BETWEEN "+str(2010)+" AND "+str(2015))
@@ -64,11 +63,9 @@ def main(inputs,output,start_year,end_year):
     #Storing the data partitioned on product categories for easy access later on
     sliced_data.write.partitionBy('product_category').parquet(output)
     
-    print("---Program ran for %s seconds ---" % (time.time() - start_time))
-
     
 if __name__ == '__main__':
-    start_time = time.time()
+
     inputs = sys.argv[1]
     output = sys.argv[2]
     start_year = sys.argv[3]
