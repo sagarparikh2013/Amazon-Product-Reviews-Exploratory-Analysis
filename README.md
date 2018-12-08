@@ -1,7 +1,9 @@
 # Amazon-Product-Reviews-Exploratory-Analysis
 Exploratory Analysis of Amazon Product Reviews Dataset comprising of various categories spanning over 20 years
 Visualizations have been done on this dataset and made public here:
-[Amazon Product Reviews Analysis](https://public.tableau.com/profile/sagar.parikh#!/vizhome/AmazonProductReviewsInsights/InsightsStory)
+
+**[Amazon Product Reviews Analysis](https://public.tableau.com/profile/sagar.parikh#!/vizhome/AmazonProductReviewsInsights/InsightsStory)**
+
 Dataset Overview:
 Amazon sells millions of products every year and most products have multiple user reviews and ratings. 
 This dataset can potentially be used to find some interesting correlations between features like Price, Ratings, Reviews etc.
