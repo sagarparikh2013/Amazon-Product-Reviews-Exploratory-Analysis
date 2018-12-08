@@ -1,11 +1,12 @@
 # Amazon-Product-Reviews-Exploratory-Analysis
-Exploratory Analysis of Amazon Product Reviews Dataset comprising of various categories spanning over 18 years
-
+Exploratory Analysis of Amazon Product Reviews Dataset comprising of various categories spanning over 20 years
+Visualizations have been done on this dataset and made public here:
+[Amazon Product Reviews Analysis](https://public.tableau.com/profile/sagar.parikh#!/vizhome/AmazonProductReviewsInsights/InsightsStory)
 Dataset Overview:
 Amazon sells millions of products every year and most products have multiple user reviews and ratings. 
 This dataset can potentially be used to find some interesting correlations between features like Price, Ratings, Reviews etc.
 
-The Amazon Review Dataset is available on the AWS PUBLIC DATASETS which contains reviews and ratings from the year 1996 to 2014. 
+The Amazon Review Dataset is available on the AWS PUBLIC DATASETS which contains reviews and ratings from the year 1996 to 2015. 
 Each review in the dataset has information about like reviewerId, productId, reviewSummary, reviewText, ratings,reviewTime and so on.
 
 The metadata as found on the UCSD website contains information about the product such as productId, title, price, sales-rank,
@@ -27,11 +28,12 @@ Intention is also to answer some intriguing questions like below (but not limite
 	other users?
 	- What is the average length of reviews which are considered most useful by others?
 	- Product counts in each category
-	- Total number of reviewers in the dataset
+	- Month wise number of reviews to uncover any seasonal trends
+	- Total number of reviewers and unique products in the dataset
 
-Potential Technology/Tools:
+Technology/Tools:
 
 	- Spark
-	- Tableau / Similar visualization tools
+	- Tableau, Matplotlib & D3js
 	- NLTK / equivalent library for parts of speech tagging and sentiment analysis of reviews
-	- AWS
+	
