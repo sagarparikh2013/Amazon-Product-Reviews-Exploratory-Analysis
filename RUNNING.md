@@ -139,10 +139,10 @@ spark-submit avg_length_per_category.py
 spark-submit product_count_categorywise.py
 ```
 
-11) *misc.py*
+11) *misc_queries.py*
 
 ```
-spark-submit misc.py
+spark-submit misc_queries.py
 ```
 
 -------------------------------------------
